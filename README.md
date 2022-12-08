@@ -12,24 +12,15 @@ Topic: Numerical Optimal Control and its Application to Spacecraft Trajectory Op
 4. [Fourth Example](#fourth-examplehttpwwwfourthexamplecom)
 
 
-## Introduction to Spacecraft Trajectories and Astrodynamics
-Astrodynamics and (also called orbital mechanics) is an interesting field that is concerned with the motion of satellites in space.
+## Introduction to Astrodynamics and Spacecraft Trajectories
+Astrodynamics (also called orbital mechanics) is an interesting field that is concerned with the application of celestial mechanics, and ballistics to the motion of rockets and spacecraft. The laws governing spaceflight are derived from Newton's 3 laws of motion, the universal law of gravitational attraction, and other perturbing forces present in the space environment (such as atmospheric drag, solar radiation pressure, etc). It is a very important discipline when it comes to space mission design, as a large part of a mission's engineering requirements are driven by the trajectory the spacecraft will follow through space. Therefore, significant effort is invested into designing trajectories that minimize the fuel, mass, life support, or power needed to support a space mission, while maximizing the payload that it can carry to achieve its mission. Additionally, when it comes to lunar or interplanetary missions, it is possible to take advantage of the gravity of planets or moons encountered on the spacecraft's trajectory (gravity assists) to reach destinations that would not be possible within the limiting constraints of the spacecraft's mass and onboard fuel.
 
-Explain a little bit about how motion in space works, how its unintitive, and how spacecraft can use it to their advantage to really far with gravity assists, but that it also usually takes lots of fuel to go somewhere, and rockets can't launch that much mass. Therefore, choosing the best trajectory to get by with the least amount of fuel is usually very important.
-
-There are significant numerical problems to be solved in this domain, one of which is the optimal control problem for trajectory optimization.
-
-How trajectories work in space, intro to orbital mechanics
-How its used in the real world to find trajectories for different situations in astrodynamics
-What are the different problem formulations in spacecraft trajectory design (min fuel, min time, other performance index)
-
+Spacecraft trajectories are designed to satisfy mission requirements, and also usually minimize a performance index that may be relevant to the mission. Typical performance indices include minimizing the fuel needed to reach a destination, minimizing the time need to reach a destination, maximizing/minimizing range or altitude given a certain amount of fuel, etc. These problems are usually formulated as an optimal control problem for trajectory optimization, which involves finding a control law (usually duration/orientation/magnitude of rocket engine thrusting) to steer the spacecraft on a trajecotry that achieves all the mission constraints (starting from Earth and reaching the desired final destination, for example) while minimizing a certain performance index (time, fuel, etc as mentioned above).
 
 ## History and Background
-Background of optimal control theory and when it was first applied to space missions
-Lev Pontryagin and Richard Bellman, as well as Edward McShane
+Optimal control can trace its origins to the 17th century, when Johann Bernoulli challenged his peers to solve the Brachistochrone problem by using a previously developed theory called the Calculus of Variations. The resulting interest spurred Leonhard Euler to formalate the problem as one of finding a curve $x(t)$ over an interval which minimized a performance index that was a function of $t, x(t), \dot x(t)$. This initial formulation led to the development of the Euler-Lagrange equations in the late 18th centry, which came with a derivation of the first order necessary conditions for a minimum. A second order necessary condition to define a minimum was derived soon after by Legendre at the turn of the 19th century. During the 19th century, further refinement and formulation of the necessary conditions for optimality occured, with Hamilton and Weierstrauss developing new ways to guarantee that a given control law is optimal with respect to a particular system. In the early 20th century, Bliss and Bolza put finishing touches on the subject, developing rigourous formulations of the performance index/cost function. In the mid 20th century, McShane and Pontryagin extended the theory to handle inequalities in control variables, and Pontrygain developed the infamous maximum principle, which states that an optimal control for a dynamical system can be found if the Hamiltonian system (which is a two-point boundary value problem) can be solved and the control Hamiltonian is proven to be at a maximum. Finally, with the advent of the space age in the 1950's and the new availability of digital computing, optimal control became widely used and applied to solving the trajectory optimization problem for space missions.
 
-
-## Spaceflight as a Dynamical System
+## The Dynamics Involved in Spaceflight
 ### Relevant Equations of Motion
 ### Relevant Equations for Control
 in general, since these equations are nonlinear, they have to be propagated using nonlinear numerical integration techniques
