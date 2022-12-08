@@ -61,18 +61,21 @@ The first equation ensures that the Hamiltonian will be maximized during the ent
 There are many methods used to solve the optimal control problem numerically, and they are split up into several categories. There are indirect vs direction methods, either of which can be executed with a shooting or a collocation technique. There is also differential dynamic programming, which is slightly different than the other methods. At the root of the problem, in order to find a numerical optimal control solution, one needs to covert the problem from a function space (infinite dimensional) to a parameter or vector space (finite dimension) optimization problem, where well established parameter optimization techniques can be applied.
 
 ### Indirect vs Direct vs Dynamic Programming Solution Methods
-The main difference between these two methods are the order in which the discretization and optimization to find the solution occur.
+The main difference between these methods are the order in which the discretization and optimization to find the solution occur.
 
 #### Indirect
-Indirect methods first analytically derive the first and second order conditions for optimality, which were shown in the above derivation of the solution to the optimal control problem, and then discretize these conditions into a numerically solvable boundary value problem. The introdction of the adjoint equation and costates allow for there to be enough equations to solve for all the variables in the boundary value problem. However, this technique is not used as much these days since it is very difficult to find solutions to these when dealing with complication spacecraft trajectories since there are no simple closed form solutions.
+Indirect methods first analytically derive the first and second order conditions for optimality that the state and control variables need to satisfy, and then discretize these conditions into a numerically solvable boundary value problem. This method is shown above in the derivation of the analytical solution to the optimal control problem. The introduction of the adjoint equation and costates allow for there to be enough equations to solve for all the variables in the boundary value problem. However, this technique is not used as much these days since it is very difficult to find solutions to these when dealing with complication spacecraft trajectories since there are no simple closed form solutions.
 
 
 #### Direct
 Direct methods, on the other hand, first discretize the trajectory optimization problem by generating a finite time grid of points along the trajectory and considering each point to be a design variable, then solve that constrained parameter optimization problem. The process of discretizing the problem into a finite time-grid is called transcription, and it results in optimizing for a vector of the state variables as well as control variables at each discretized point in the domain. Since the constraints and equations of motion are usually non-linear, this results in a non-linear optimization problem, which has to fullfill the first order necessary optimality conditions, also know as the KKT conditions.
 
+#### Dynamic Programming
+Dynamic programming is similar to direct methods because it discretizes the optimization problem along the domain and solves it based on the result of the constraint for the dynamical equations at each point. However, the optimization itself is carried out differently than the direct method, where the optimal control is actually propagated backwards along a candidate trajectory and the cost function evaluated after this is performed in an iterative fashion, exploiting the time-dependent nature of the trajectory.
+
 
 ### Shooting vs Collocation Techniques
-Direct and indirect methods often involve one of the following techniques to impose the dynamical equations in the solution (ensure that the solution obeys the constraining dynamical equations).
+Direct and indirect methods often involve one of the following techniques to actually solve the differential equations involved in the optimal control problem and find a solution in the state variables that satisfy the dynamical equations and a solution in the control variables that produce a minimized cost.
 
 #### Shooting Techniques
 The shooting technique is meant to solve boundary value problems (like the optimal control problem) by converting it into an initial value problem. Take a nonlinear differential equation of the form
@@ -89,6 +92,7 @@ and solving for the parameter $a$.
 
 Additionally, since the solutions to the equations of motion are not known, they have to be numerically integrated to go from the initial condition to the final condition in order to check if the boundary value problem has been satisfied. This can be done with explicit numerical integration methods such as Euler's method for low order equations of motion, or Runge-Kutta methods for higher order fidelity. One disadvantage with this technique is that you are not always guaranteed to find a solution that satisfies the boundary value problem, since this technique is essentially trial and error.
 
+
 #### Collocation Techniques
 The collocation technique (also called the simulatenous technique, or numerical quadrature) aims to solve boundary value problems by choosing a set of finite dimensional candidate solutions (comprised of polynomials up to a certain degree) and a number of points in the domain (these are called the collocation points), in order to choose a solution that satisfies the dynamics equations at all the collocation points.
 
@@ -96,12 +100,17 @@ On the interval of the boundary value problem, the domain is split up into n poi
 $$\begin{bmatrix}
   1 & t_1 & t_1^2  \\
   1 & t_2 & t_2^2
-     \end{bmatrix} \begin{bmatrix} a_1 \\ a_2 \end{bmatrix} = \begin{bmatrix} y_1 \\ y_2 \end{bmatrix}$$
+\end{bmatrix} \begin{bmatrix} a_1 \\ a_2 \end{bmatrix} = \begin{bmatrix} y_1 \\ y_2 \end{bmatrix}$$
 
 for interpolating polynomial of order n-1 :
 $$p_{n-1}(t) = a_1 + a_2*t + ... + a_n*t^{n-1}$$
 
 The polynomial or piecewise polynomial approximates the trajectory across the entire domain, and is less accurate than shooting methods which can perform higher order numerical integration. However, it is guaranteed to find an approximate trajectory as long as the appropriate polynomial basis functions and sub-interval spacing are properly chosen.
+
+
+## Applications of Optimal Control Theory in Commercial Applications
+There is a wide variety of software designed to solve optimal control problems, with certain ones focusing on specific numerical methods. The majority use direct collocation, such as GPOPS-II, PSOPT, SOS, DIRCOL, and some use other methods such as indirect collocation (DIDO).
+
 
 ## References
 
