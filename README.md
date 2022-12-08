@@ -5,6 +5,26 @@ Name: Antoine Paletta
 Topic: Numerical Optimal Control and its Application to Spacecraft Trajectory Optimization
 ----
 
+## Table of Contents
+- [Introduction to Astrodynamics and Spacecraft Trajectories](#introduction-to-astrodynamics-and-spacecraft-trajectories)
+- [History and Background](#history-and-background)
+- [The Dynamics Involved in Spaceflight](#the-dynamics-involved-in-spaceflight)
+    -  [ Relevant Equations of Motion](#relevant-equations-of-motion)
+    -  [ Relevant Equations for Control](#relevant-equations-for-control)
+- [Optimal Control Theory for Trajectory Optimization](#optimal-control-theory-for-trajectory-optimization)
+
+    - [The General Optimal Control Problem Formulation](#the-general-optimal-control-problem-formulation)
+    - [Solving the Optimal Control Problem](#solving-the-optimal-control-problem)
+
+- [Numerical Optimal Control](#numerical-optimal-control)
+- [Indirect vs Direct vs Dynamic Programming Solution Methods](#indirect-vs-direct-vs-dynamic-programming-solution-methods)
+
+- [Shooting vs Collocation Techniques](#shooting-vs-collocation-techniques)
+
+- [Applications of Optimal Control Theory in Commercial Applications](#applications-of-optimal-control-theory-in-commercial-applications)
+
+- [References](#references)
+
 ## Introduction to Astrodynamics and Spacecraft Trajectories
 Astrodynamics (also called orbital mechanics) is an interesting field that is concerned with the application of celestial mechanics, and ballistics to the motion of rockets and spacecraft. The laws governing spaceflight are derived from Newton's 3 laws of motion, the universal law of gravitational attraction, and other perturbing forces present in the space environment (such as atmospheric drag, solar radiation pressure, etc). It is a very important discipline when it comes to space mission design, as a large part of a mission's engineering requirements are driven by the trajectory the spacecraft will follow through space. Therefore, significant effort is invested into designing trajectories that minimize the fuel, mass, life support, or power needed to support a space mission, while maximizing the payload that it can carry to achieve its mission. Additionally, when it comes to lunar or interplanetary missions, it is possible to take advantage of the gravity of planets or moons encountered on the spacecraft's trajectory (gravity assists) to reach destinations that would not be possible within the limiting constraints of the spacecraft's mass and onboard fuel.
 
@@ -120,3 +140,4 @@ There is a wide variety of software designed to solve optimal control problems, 
 4. "Numerical Methods for Solving Optimal Control Problems", Garrett Robert Rose, 2015
 5. "https://en.wikipedia.org/wiki/Trajectory_optimization", Wikipedia Article, 2022
 6. "https://en.wikipedia.org/wiki/Collocation_method", Wikipedia Article, 2022
+7. "An Introduction to Trajectory Optimization: How to Do Your Own Direct Collocation", Matthew Kelly, 2017
