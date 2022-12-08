@@ -5,13 +5,6 @@ Name: Antoine Paletta
 Topic: Numerical Optimal Control and its Application to Spacecraft Trajectory Optimization
 ----
 
-## Table of Contents
-1. [Introduction](#example)
-2. [Example2](#example2)
-3. [Third Example](#third-example)
-4. [Fourth Example](#fourth-examplehttpwwwfourthexamplecom)
-
-
 ## Introduction to Astrodynamics and Spacecraft Trajectories
 Astrodynamics (also called orbital mechanics) is an interesting field that is concerned with the application of celestial mechanics, and ballistics to the motion of rockets and spacecraft. The laws governing spaceflight are derived from Newton's 3 laws of motion, the universal law of gravitational attraction, and other perturbing forces present in the space environment (such as atmospheric drag, solar radiation pressure, etc). It is a very important discipline when it comes to space mission design, as a large part of a mission's engineering requirements are driven by the trajectory the spacecraft will follow through space. Therefore, significant effort is invested into designing trajectories that minimize the fuel, mass, life support, or power needed to support a space mission, while maximizing the payload that it can carry to achieve its mission. Additionally, when it comes to lunar or interplanetary missions, it is possible to take advantage of the gravity of planets or moons encountered on the spacecraft's trajectory (gravity assists) to reach destinations that would not be possible within the limiting constraints of the spacecraft's mass and onboard fuel.
 
@@ -52,43 +45,69 @@ $$g_L\leq g(x(t),u(t),t) \leq g_U$$
 The boundary constraints represent starting and terminating conditions such as location at the beginning/end of the trajectory and desired time to completion of the trajectory. The variable/path constraints model limitations in the path chosen (can't fly through the Earth) or in the thrusting limits of the rocket engine.
 
 ### Solving the Optimal Control Problem
-Taking the derivative of the cost function with respect to the state and control variables, and accounting for the inequality constraints we obtain the augemented Lagrangian forumation below:
+In order to solve the optimal control problem and prove that there is an optimal control input $u^*(t)$ that minimizes $J$, one needs to derive a set of necessary conditions to be satisfied for optimality. First, since the problem deals with constrained optimization, one needs to use the Lagrangian multiplier technique (adding a vector of "costates" $\lambda$) by adjoining the dynamic constraints to the cost function:
+$$\min {\bar J} = \Phi[x(t_f),t_f] + \int\limits_{t_0}^{t_f}L[x,u,t] + \lambda^T[f(x,u,t) - \dot x]dt$$
 
+One can pull out an important function to define from this intergral, which is the Hamiltonian:
+$$H(x,u,\lambda,t) = L(x,u,t) + \lambda^T(t)f(x,u,t)$$
 
-
-
+Finally, the necessary conditions for optimality that are based on taking a $\delta \bar J = 0$ (first order optimality necessary condition) and other theorem for second order optimality allow the definitions below: \
+$$\frac{\partial H}{\partial u} = 0$$
+$$-\dot \lambda^T = \frac{\partial H}{\partial x} $$
+$$\lambda^T(t_f) = 0$$
+The first equation ensures that the Hamiltonian will be maximized during the entire trajectory in order to guarantee that the control $u^*(t)$ is optimal. In addition, the boundary conditions impose the last two equations, called the adjoint equation and the transversality condition respectively.
 
 ## Numerical Optimal Control
-The classical optimal control problem does not assume linearity, and as such these equations are not written in matrix form in the above definition.
-in general, since these equations are nonlinear, they have to be propagated using nonlinear numerical integration techniques
+There are many methods used to solve the optimal control problem numerically, and they are split up into several categories. There are indirect vs direction methods, either of which can be executed with a shooting or a collocation technique. There is also differential dynamic programming, which is slightly different than the other methods. At the root of the problem, in order to find a numerical optimal control solution, one needs to covert the problem from a function space (infinite dimensional) to a parameter or vector space (finite dimension) optimization problem, where well established parameter optimization techniques can be applied.
 
 ### Indirect vs Direct vs Dynamic Programming Solution Methods
+The main difference between these two methods are the order in which the discretization and optimization to find the solution occur.
+
 #### Indirect
+Indirect methods first analytically derive the first and second order conditions for optimality, which were shown in the above derivation of the solution to the optimal control problem, and then discretize these conditions into a numerically solvable boundary value problem. The introdction of the adjoint equation and costates allow for there to be enough equations to solve for all the variables in the boundary value problem. However, this technique is not used as much these days since it is very difficult to find solutions to these when dealing with complication spacecraft trajectories since there are no simple closed form solutions.
+
+
 #### Direct
-#### Dynamic Programming
+Direct methods, on the other hand, first discretize the trajectory optimization problem by generating a finite time grid of points along the trajectory and considering each point to be a design variable, then solve that constrained parameter optimization problem. The process of discretizing the problem into a finite time-grid is called transcription, and it results in optimizing for a vector of the state variables as well as control variables at each discretized point in the domain. Since the constraints and equations of motion are usually non-linear, this results in a non-linear optimization problem, which has to fullfill the first order necessary optimality conditions, also know as the KKT conditions.
 
-primer vector theory
-
-can mention Trapezoidal quadrature and Hermite-Simpson
-need a good initial guess with these kinds of problems, that is usually the challenge
-
-discuss optimal control for low thrust, including thruster always on, and control as an angle, mention this as an example
 
 ### Shooting vs Collocation Techniques
-#### single vs multiple shooting
+Direct and indirect methods often involve one of the following techniques to impose the dynamical equations in the solution (ensure that the solution obeys the constraining dynamical equations).
 
-#### collocation:
-turning a trajectory optimization problem into a constrained parameter optimization problem
+#### Shooting Techniques
+The shooting technique is meant to solve boundary value problems (like the optimal control problem) by converting it into an initial value problem. Take a nonlinear differential equation of the form
 
+$\ddot y(t) = f(\dot y(t), y(t), t)$ with boundary value conditions $y(t_0) = y_0$ and $y(t_f) = y_f$
 
+This can be converted into the initial value problem as follows by allowing $y(t;a)$ to be the solution for the initial value problem: \
+$\ddot y(t) = f(\dot y(t), y(t), t)$ with initial conditions $y(t_0) = y_0$ and $\dot y(t_0) = a$ \
+If $y(t_f;a) = y_f$, then $y(t;a)$ is also the solution to the boundary value problem.
 
+Numerically solving this is performed by using a root finding method such as Newton's method, bisection, or Broyden's method for vector functions to find the zeros of the function below: \
+$F(a) = y(t_f;a) - y_f$
+and solving for the parameter $a$.
 
+Additionally, since the solutions to the equations of motion are not known, they have to be numerically integrated to go from the initial condition to the final condition in order to check if the boundary value problem has been satisfied. This can be done with explicit numerical integration methods such as Euler's method for low order equations of motion, or Runge-Kutta methods for higher order fidelity. One disadvantage with this technique is that you are not always guaranteed to find a solution that satisfies the boundary value problem, since this technique is essentially trial and error.
 
+#### Collocation Techniques
+The collocation technique (also called the simulatenous technique, or numerical quadrature) aims to solve boundary value problems by choosing a set of finite dimensional candidate solutions (comprised of polynomials up to a certain degree) and a number of points in the domain (these are called the collocation points), in order to choose a solution that satisfies the dynamics equations at all the collocation points.
 
-## Applications of numerical optimal control in commercial software packages
-Talk about how the software is generalized to handle all types of optimal control problems, not just space ones
-GPOPS-2, TrajOpt, PSOPT
-SNOPT, IPOPT, etc
-How its implemented in solvers like STK, GMAT, etc
+On the interval of the boundary value problem, the domain is split up into n points, and a polynomial or series of piecewise polynomials are fit to the function evaluations at those points by solving a linear system of equations for the polynomial coefficients. This is shown for one sub-interval with a monomial basis below:
+$$\begin{bmatrix}
+  1 & t_1 & t_1^2  \\
+  1 & t_2 & t_2^2
+     \end{bmatrix} \begin{bmatrix} a_1 \\ a_2 \end{bmatrix} = \begin{bmatrix} y_1 \\ y_2 \end{bmatrix}$$
+
+for interpolating polynomial of order n-1 :
+$$p_{n-1}(t) = a_1 + a_2*t + ... + a_n*t^{n-1}$$
+
+The polynomial or piecewise polynomial approximates the trajectory across the entire domain, and is less accurate than shooting methods which can perform higher order numerical integration. However, it is guaranteed to find an approximate trajectory as long as the appropriate polynomial basis functions and sub-interval spacing are properly chosen.
 
 ## References
+
+1. "A Survey on Low-Thrust Trajectory Optimization Approaches", David Morante, et. al., 2021
+2. "A review of optimization techniques in spacecraft flight trajectory design", Runqi Chai, et. al., 2019
+3. "Numerical Optimal Control", Moritz Diehl, 2011
+4. "Numerical Methods for Solving Optimal Control Problems", Garrett Robert Rose, 2015
+5. "https://en.wikipedia.org/wiki/Trajectory_optimization", Wikipedia Article, 2022
+6. "https://en.wikipedia.org/wiki/Collocation_method", Wikipedia Article, 2022
